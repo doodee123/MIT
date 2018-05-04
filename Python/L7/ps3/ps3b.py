@@ -8,6 +8,7 @@ from perm import *
 # Problem #6A: Computer chooses a word
 #
 #
+comphand = deal_hand(HAND_SIZE)
 def comp_choose_word(hand, word_list):
     """
 	Given a hand and a word_dict, find the word that gives the maximum value score, and return it.
@@ -17,8 +18,17 @@ def comp_choose_word(hand, word_list):
     word_list: list (string)
     """
     # TO DO...
+    global HAND_SIZE
+    display_hand(comphand)
+    print 'length of perms', len(get_perms(comphand, HAND_SIZE))
+    print 'Type is', type(get_perms(comphand, HAND_SIZE)) 
+   #for s in range(0,HAND_SIZE):
+   #     is_valid_word(get_perms(comphand, s), comphand, word_list)
+   #     if True:
+   #         print 'We have a winner!', s, get_perms(comphand, s)
+    
 
-#
+
 # Problem #6B: Computer plays a hand
 #
 def comp_play_hand(hand, word_list):
@@ -72,5 +82,5 @@ def play_game(word_list):
 if __name__ == '__main__':
     word_list = load_words()
     play_game(word_list)
-
+    comp_choose_word(comphand,word_list)
     
