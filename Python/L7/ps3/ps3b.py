@@ -9,6 +9,7 @@ from perm import *
 #
 #
 comphand = deal_hand(HAND_SIZE)
+testhand = {'a':1, 's':2}
 def comp_choose_word(hand, word_list):
     """
 	Given a hand and a word_dict, find the word that gives the maximum value score, and return it.
@@ -19,9 +20,26 @@ def comp_choose_word(hand, word_list):
     """
     # TO DO...
     global HAND_SIZE
-    display_hand(comphand)
-    print 'length of perms', len(get_perms(comphand, HAND_SIZE))
-    print 'Type is', type(get_perms(comphand, HAND_SIZE)) 
+    display_hand(testhand)
+    handperms = get_perms(testhand, 3)
+    print 'length of perms', len(handperms)
+    print 'Type is', type(handperms)
+    checkword()
+
+def checkword():
+#    newperms = get_perms(comphand, (HAND_SIZE - 1))
+    handperms = get_perms(comphand, (HAND_SIZE))
+    validwords = []
+    for x in handperms:
+        if is_valid_word(x, comphand, word_list) == False:
+            pass
+        else:
+            print 'Is True'
+            validwords += [x]
+            print validwords
+#    checkword()
+
+        
    #for s in range(0,HAND_SIZE):
    #     is_valid_word(get_perms(comphand, s), comphand, word_list)
    #     if True:
