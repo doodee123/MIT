@@ -203,7 +203,7 @@ def calculate_handlen(hand):
 #
 # Problem #4: Playing a hand
 #
-hand = {'p':1, 'y':1, 't':1, 'h':1, 'o':1, 'n':1}
+#hand = {'p':1, 'y':1, 't':1, 'h':1, 'o':1, 'n':1}
 def play_hand(hand, word_list):
 
     """

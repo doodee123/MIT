@@ -10,6 +10,7 @@ from perm import *
 #
 #comphand = deal_hand(HAND_SIZE)
 comphand = {'a':1, 's':2, 'p':1}
+word = ''
 def comp_choose_word(hand, word_list):
     """
 	Given a hand and a word_dict, find the word that gives the maximum value score, and return it.
@@ -21,35 +22,42 @@ def comp_choose_word(hand, word_list):
     # TO DO...
     global HAND_SIZE
     display_hand(comphand)
-    checkhand(HAND_SIZE)
-    print 'Your valid words to pick are: ', validwords
+    return checkhand(HAND_SIZE)
+    #print 'Your valid word to pick is: ', validwords[0]
 
 def checkhand(n):
     global validwords
     validwords = []
+    global word
     for x in range(n, 1, -1):
         checkword(x)
-    return validwords
+    if not validwords:
+        return False
+    else:
+        word = validwords[0]
+#        print type(compword)
+        return word
+#    return False
 
 def checkword(n):
     global handperms
     global validwords
-#    newperms = get_perms(comphand, (HAND_SIZE - 1))
     handperms = get_perms(comphand, n)
-    #validwords = []
     attempt = len(handperms)
     for x in handperms:
         if x not in word_list:
             attempt -= 1
             print 'nope!', attempt
-           # pass
         else:
-            if x in validwords:
-                pass
-            else:
-                print 'Is True'
-                validwords += [x]
-                print validwords
+            validwords += [x]
+            break
+        
+ #           if x in validwords:
+ #               pass
+ #           else:
+ #               print 'Is True'
+ #               validwords += [x]
+ #               print validwords
 
         
    #for s in range(0,HAND_SIZE):
@@ -81,7 +89,22 @@ def comp_play_hand(hand, word_list):
      word_list: list (string)
     """
     # TO DO ...    
-    
+    global sumcompscore
+    global comphand
+    sumcompscore = 0
+    while calculate_handlen(hand) > 1:
+        display_hand(hand)
+        word = comp_choose_word(hand, word_list)
+        if word == False:
+            print 'Goodbye Computer!'
+            break
+        else:
+            sumcompscore = sumcompscore + get_word_score(word, HAND_SIZE)
+            print '"'+ word +'"', 'earned', wordscore, 'points.', 'Total:', sumcompscore, 'points.'
+            hand = update_hand(hand, word)
+
+    print 'Total: ', sumcompscore, 'points'
+    play_game(word_list)
 #
 # Problem #6C: Playing a game
 #
@@ -105,6 +128,23 @@ def play_game(word_list):
     word_list: list (string)
     """
     # TO DO...
+    comp_play_hand(hand, word_list)
+#    gametype = raw_input('Enter n for new random hand, r to replay the last hand and e to exit the game: ')
+#    global myhand
+#    global sumwordscore
+#    sumwordscore = 0
+#    if gametype == 'n':
+#        newhand = deal_hand(HAND_SIZE)
+#        myhand = newhand
+#        play_hand(newhand, word_list)
+#    elif gametype == 'r':
+#        play_hand(myhand, word_list)
+#    elif gametype =='e':
+#        print 'Exiting the game, goodbye.'
+#        return
+#    else:
+#        print 'Please enter a valid option.'
+#        play_game(word_list)
         
 #
 # Build data structures used for entire session and play game
