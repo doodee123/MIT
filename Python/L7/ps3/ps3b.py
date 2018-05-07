@@ -8,8 +8,8 @@ from perm import *
 # Problem #6A: Computer chooses a word
 #
 #
-comphand = deal_hand(HAND_SIZE)
-testhand = {'a':1, 's':2}
+#comphand = deal_hand(HAND_SIZE)
+comphand = {'a':1, 's':2, 'p':1}
 def comp_choose_word(hand, word_list):
     """
 	Given a hand and a word_dict, find the word that gives the maximum value score, and return it.
@@ -20,24 +20,36 @@ def comp_choose_word(hand, word_list):
     """
     # TO DO...
     global HAND_SIZE
-    display_hand(testhand)
-    handperms = get_perms(testhand, 3)
-    print 'length of perms', len(handperms)
-    print 'Type is', type(handperms)
-    checkword()
+    display_hand(comphand)
+    checkhand(HAND_SIZE)
+    print 'Your valid words to pick are: ', validwords
 
-def checkword():
-#    newperms = get_perms(comphand, (HAND_SIZE - 1))
-    handperms = get_perms(comphand, (HAND_SIZE))
+def checkhand(n):
+    global validwords
     validwords = []
+    for x in range(n, 1, -1):
+        checkword(x)
+    return validwords
+
+def checkword(n):
+    global handperms
+    global validwords
+#    newperms = get_perms(comphand, (HAND_SIZE - 1))
+    handperms = get_perms(comphand, n)
+    #validwords = []
+    attempt = len(handperms)
     for x in handperms:
-        if is_valid_word(x, comphand, word_list) == False:
-            pass
+        if x not in word_list:
+            attempt -= 1
+            print 'nope!', attempt
+           # pass
         else:
-            print 'Is True'
-            validwords += [x]
-            print validwords
-#    checkword()
+            if x in validwords:
+                pass
+            else:
+                print 'Is True'
+                validwords += [x]
+                print validwords
 
         
    #for s in range(0,HAND_SIZE):
