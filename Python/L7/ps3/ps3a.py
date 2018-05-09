@@ -141,7 +141,7 @@ def deal_hand(n):
 #
 # Problem #2: Update a hand by removing letters
 #
-#hand = {'a':1, 'q':1, 'l':2, 'm':1, 'u':1, 'i':1}
+#
 def update_hand(hand, word):
     """
     Assumes that 'hand' has all the letters in word.
@@ -203,7 +203,6 @@ def calculate_handlen(hand):
 #
 # Problem #4: Playing a hand
 #
-#hand = {'p':1, 'y':1, 't':1, 'h':1, 'o':1, 'n':1}
 def play_hand(hand, word_list):
 
     """

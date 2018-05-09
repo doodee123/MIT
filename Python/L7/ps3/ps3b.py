@@ -9,7 +9,8 @@ from perm import *
 #
 #
 #comphand = deal_hand(HAND_SIZE)
-comphand = {'a':1, 's':2, 'p':1}
+#comphand = {'a':1, 's':2, 'p':1, 'q':1}
+comphand = {'q':1}
 word = ''
 def comp_choose_word(hand, word_list):
     """
@@ -35,9 +36,8 @@ def checkhand(n):
         return False
     else:
         word = validwords[0]
-#        print type(compword)
         return word
-#    return False
+
 
 def checkword(n):
     global handperms
@@ -51,21 +51,8 @@ def checkword(n):
         else:
             validwords += [x]
             break
-        
- #           if x in validwords:
- #               pass
- #           else:
- #               print 'Is True'
- #               validwords += [x]
- #               print validwords
-
-        
-   #for s in range(0,HAND_SIZE):
-   #     is_valid_word(get_perms(comphand, s), comphand, word_list)
-   #     if True:
-   #         print 'We have a winner!', s, get_perms(comphand, s)
-    
-
+     
+     
 
 # Problem #6B: Computer plays a hand
 #
@@ -92,19 +79,21 @@ def comp_play_hand(hand, word_list):
     global sumcompscore
     global comphand
     sumcompscore = 0
-    while calculate_handlen(hand) > 1:
+    word = comp_choose_word(hand, word_list)
+    while word == True:
+        print 'The handlength is: ', calculate_handlen(hand)
         display_hand(hand)
-        word = comp_choose_word(hand, word_list)
         if word == False:
             print 'Goodbye Computer!'
-            break
+            return
         else:
             sumcompscore = sumcompscore + get_word_score(word, HAND_SIZE)
             print '"'+ word +'"', 'earned', wordscore, 'points.', 'Total:', sumcompscore, 'points.'
             hand = update_hand(hand, word)
-
+            comphand = hand
     print 'Total: ', sumcompscore, 'points'
-    play_game(word_list)
+    comp_play_hand(hand, word_list)
+    display_hand(hand)
 #
 # Problem #6C: Playing a game
 #
@@ -128,7 +117,8 @@ def play_game(word_list):
     word_list: list (string)
     """
     # TO DO...
-    comp_play_hand(hand, word_list)
+    print 'your hand is: '
+#    display_hand(hand)
 #    gametype = raw_input('Enter n for new random hand, r to replay the last hand and e to exit the game: ')
 #    global myhand
 #    global sumwordscore
@@ -153,4 +143,5 @@ if __name__ == '__main__':
     word_list = load_words()
     play_game(word_list)
     comp_choose_word(comphand,word_list)
+    comp_play_hand(comphand, word_list)
     
