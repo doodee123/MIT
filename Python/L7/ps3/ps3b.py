@@ -9,8 +9,8 @@ from perm import *
 #
 #
 #comphand = deal_hand(HAND_SIZE)
-#comphand = {'a':1, 's':2, 'p':1, 'q':1}
-comphand = {'q':1}
+comphand = {'a':1, 's':2, 'p':1, 'q':1}
+#comphand = {'q':1}
 word = ''
 def comp_choose_word(hand, word_list):
     """
@@ -78,9 +78,10 @@ def comp_play_hand(hand, word_list):
     # TO DO ...    
     global sumcompscore
     global comphand
+    global wordscore
     sumcompscore = 0
     word = comp_choose_word(hand, word_list)
-    while word == True:
+    while calculate_handlen(hand) > 0:
         print 'The handlength is: ', calculate_handlen(hand)
         display_hand(hand)
         if word == False:
@@ -94,6 +95,7 @@ def comp_play_hand(hand, word_list):
     print 'Total: ', sumcompscore, 'points'
     comp_play_hand(hand, word_list)
     display_hand(hand)
+    
 #
 # Problem #6C: Playing a game
 #
