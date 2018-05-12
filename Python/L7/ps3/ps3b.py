@@ -9,9 +9,7 @@ from perm import *
 #
 #
 #comphand = deal_hand(HAND_SIZE)
-comphand = {'a':1, 's':2, 'p':1, 'q':1}
-#comphand = {'q':1}
-word = ''
+sumcompscore = 0
 def comp_choose_word(hand, word_list):
     """
 	Given a hand and a word_dict, find the word that gives the maximum value score, and return it.
@@ -22,16 +20,16 @@ def comp_choose_word(hand, word_list):
     """
     # TO DO...
     global HAND_SIZE
-    display_hand(comphand)
-    return checkhand(HAND_SIZE)
+    display_hand(hand)
+    return checkhand(HAND_SIZE, hand)
     #print 'Your valid word to pick is: ', validwords[0]
 
-def checkhand(n):
+def checkhand(n, hand):
     global validwords
     validwords = []
     global word
     for x in range(n, 1, -1):
-        checkword(x)
+        checkword(x, hand)
     if not validwords:
         return False
     else:
@@ -39,15 +37,17 @@ def checkhand(n):
         return word
 
 
-def checkword(n):
+def checkword(n, hand):
     global handperms
     global validwords
-    handperms = get_perms(comphand, n)
+    handperms = get_perms(hand, n)
     attempt = len(handperms)
+    print 'Calculating best word with', n, 'letters' 
     for x in handperms:
         if x not in word_list:
-            attempt -= 1
-            print 'nope!', attempt
+            #attempt -= 1
+            #print 'nope!', attempt
+            pass
         else:
             validwords += [x]
             break
@@ -77,24 +77,22 @@ def comp_play_hand(hand, word_list):
     """
     # TO DO ...    
     global sumcompscore
-    global comphand
+    #global comphand
     global wordscore
-    sumcompscore = 0
     word = comp_choose_word(hand, word_list)
-    while calculate_handlen(hand) > 0:
-        print 'The handlength is: ', calculate_handlen(hand)
-        display_hand(hand)
-        if word == False:
-            print 'Goodbye Computer!'
-            return
-        else:
-            sumcompscore = sumcompscore + get_word_score(word, HAND_SIZE)
-            print '"'+ word +'"', 'earned', wordscore, 'points.', 'Total:', sumcompscore, 'points.'
-            hand = update_hand(hand, word)
-            comphand = hand
-    print 'Total: ', sumcompscore, 'points'
-    comp_play_hand(hand, word_list)
+    if word == False:
+        print 'No more valid words, Goodbye!'
+        print 'Total: ', sumcompscore, 'points'
+        return play_game(word_list)
+    else:
+        sumcompscore = sumcompscore + get_word_score(word, HAND_SIZE)
+        print '"'+ word +'"', 'earned', wordscore, 'points.', 'Total:', sumcompscore, 'points.'
+        hand = update_hand(hand, word)
+        comphand = hand
+    
+    #print 'Total: ', sumcompscore, 'points'
     display_hand(hand)
+    comp_play_hand(hand, word_list)
     
 #
 # Problem #6C: Playing a game
@@ -119,24 +117,36 @@ def play_game(word_list):
     word_list: list (string)
     """
     # TO DO...
-    print 'your hand is: '
-#    display_hand(hand)
-#    gametype = raw_input('Enter n for new random hand, r to replay the last hand and e to exit the game: ')
-#    global myhand
-#    global sumwordscore
-#    sumwordscore = 0
-#    if gametype == 'n':
-#        newhand = deal_hand(HAND_SIZE)
-#        myhand = newhand
-#        play_hand(newhand, word_list)
-#    elif gametype == 'r':
-#        play_hand(myhand, word_list)
-#    elif gametype =='e':
-#        print 'Exiting the game, goodbye.'
-#        return
-#    else:
-#        print 'Please enter a valid option.'
-#        play_game(word_list)
+    gametype = raw_input('Enter n for new random hand, r to replay the last hand and e to exit the game: ')
+    global myhand
+    global sumwordscore
+    sumwordscore = 0
+    if gametype == 'n':
+        newhand = deal_hand(HAND_SIZE)
+        myhand = newhand
+        comptype = raw_input('Enter u to play single player and c to have the computer play: ')
+        if comptype == 'u':
+            play_hand(newhand, word_list)
+        elif comptype == 'c':
+            comp_play_hand(newhand, word_list)
+        else:
+            print 'Please enter a valid option.'
+            play_game(word_list)
+    elif gametype == 'r':
+        comptype = raw_input('Enter u to play single player and c to have the computer play: ')  
+        if comptype == 'u':
+            play_hand(myhand, word_list)
+        elif comptype == 'c':
+            comp_play_hand(myhand, word_list)
+        else:
+            print 'Please enter a valid option.'
+            play_game(word_list)
+    elif gametype =='e':
+        print 'Exiting the game, goodbye.'
+        return
+    else:
+        print 'Please enter a valid option.'
+        play_game(word_list)
         
 #
 # Build data structures used for entire session and play game
@@ -144,6 +154,4 @@ def play_game(word_list):
 if __name__ == '__main__':
     word_list = load_words()
     play_game(word_list)
-    comp_choose_word(comphand,word_list)
-    comp_play_hand(comphand, word_list)
     
