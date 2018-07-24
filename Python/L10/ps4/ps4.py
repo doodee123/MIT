@@ -121,6 +121,37 @@ def build_coder(shift):
     (The order of the key-value pairs may be different.)
     """
     ### TODO.
+    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz '
+    alphaDict = {}
+    
+    for c in alphabet:
+        alphaDict[c] = alphabet.index(c)
+    #print 'Your default dictionary is '
+    #print '============================'
+    #print alphaDict
+    #print '============================'
+    #print ' '
+    
+
+    newDict = alphaDict
+    print 'alphabet length is ', len(alphabet)
+    for c in alphaDict:
+        counter = alphaDict[c]
+        newshift = counter + shift
+        if newshift > (len(alphabet) - 1):
+            newcounter = newshift - len(alphabet)
+            newDict[c] = alphabet[newcounter]
+        else:
+            newcounter = newshift
+            newDict[c] = alphabet[newcounter]
+
+    print 'Your new dictionary is '
+    print '============================'
+    print  newDict
+    print '============================'
+    return newDict
+        
+    #print 'Your new dictionary is ', newDict
 
 def build_encoder(shift):
     """
@@ -150,6 +181,8 @@ def build_encoder(shift):
     HINT : Use build_coder.
     """
     ### TODO.
+    encode = build_coder(shift)
+    return encode
 
 def build_decoder(shift):
     """
@@ -180,7 +213,24 @@ def build_decoder(shift):
     HINT : Use build_coder.
     """
     ### TODO.
- 
+    decodeDict = {}
+    encodeDict = build_coder(shift)
+    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz '
+
+    for k, v in encodeDict.iteritems():
+        #decodeDict[v] = decodeDict.get(v,[])
+        #decodeDict[v].append(k)
+        decodeDict[v] = k
+    #for c in encodeDict:   
+        #counter = alphabet.index(encodeDict[c])
+        #newshift = counter - shift
+        #if newshift < (0):
+        #    newcounter = newshift + len(alphabet)
+        #    decodeDict[c] = alphabet[newcounter]
+        #else:
+        #    newcounter = newshift
+        #    decodeDict[c] = alphabet[newcounter]
+    return decodeDict    
 
 def apply_coder(text, coder):
     """
@@ -197,7 +247,15 @@ def apply_coder(text, coder):
     'Hello, world!'
     """
     ### TODO.
-  
+    cryptic = ''
+    for c in text:
+        if c not in coder:
+            cryptic += c
+        else:
+            cryptic += coder[c]
+    print 'And your new cryptic text is '
+    print '-------------'
+    print cryptic    
 
 def apply_shift(text, shift):
     """
@@ -217,7 +275,56 @@ def apply_shift(text, shift):
     'Apq hq hiham a.'
     """
     ### TODO.
-   
+    #coder = build_encoder(shift)
+
+    alpha_low = 'abcdefghijklmnopqrstuvwxyz '
+    alpha_high = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    alphaDictLow = {}
+    alphaDictHigh = {}
+    
+    for c in alpha_low:
+        alphaDictLow[c] = alpha_low.index(c)
+    
+    for c in alpha_high:
+        alphaDictHigh[c] = alpha_high.index(c)
+
+    newDictLow = alphaDictLow
+    print 'alphabet length is ', len(alpha_low)
+    for c in alphaDictLow:
+        counter = alphaDictLow[c]
+        newshift = counter + shift
+        if newshift > (len(alpha_low) - 1):
+            newcounter = newshift - len(alpha_low)
+            newDictLow[c] = alpha_low[newcounter]
+        else:
+            newcounter = newshift
+            newDictLow[c] = alpha_low[newcounter]
+    
+    newDictHigh = alphaDictHigh
+    print 'alphabet length is ', len(alpha_high)
+    for c in alphaDictHigh:
+        counter = alphaDictHigh[c]
+        newshift = counter + shift
+        if newshift > (len(alpha_high) - 1):
+            newcounter = newshift - len(alpha_high)
+            newDictHigh[c] = alpha_high[newcounter]
+        else:
+            newcounter = newshift
+            newDictHigh[c] = alpha_high[newcounter]
+    
+    cryptic = ''
+    for c in text:
+        if c in newDictHigh:
+            cryptic += newDictHigh[c]
+        elif c in newDictLow:
+            cryptic += newDictLow[c]
+        else:
+            cryptic += c
+
+    print 'Your new string is '
+    print '---------------'
+    print cryptic
+ 
 #
 # Problem 2: Codebreaking.
 #
