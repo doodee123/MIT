@@ -345,6 +345,13 @@ def find_best_shift(wordlist, text):
     'Hello, world!'
     """
     ### TODO
+    splitText = text.split()
+    print splitText
+    for c in splitText:
+        print c
+        #text2 = ''.join([char for char in text if char.isalpha()])
+    #print text2
+    
    
 #
 # Problem 3: Multi-level encryption.
