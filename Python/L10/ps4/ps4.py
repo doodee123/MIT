@@ -145,10 +145,10 @@ def build_coder(shift):
             newcounter = newshift
             newDict[c] = alphabet[newcounter]
 
-    print 'Your new dictionary is '
-    print '============================'
-    print  newDict
-    print '============================'
+    #print 'Your new dictionary is '
+    #print '============================'
+    #print  newDict
+    #print '============================'
     return newDict
         
     #print 'Your new dictionary is ', newDict
@@ -253,9 +253,10 @@ def apply_coder(text, coder):
             cryptic += c
         else:
             cryptic += coder[c]
-    print 'And your new cryptic text is '
-    print '-------------'
-    print cryptic    
+    #print 'And your new cryptic text is '
+    #print '-------------'
+    print cryptic
+    return cryptic    
 
 def apply_shift(text, shift):
     """
@@ -323,11 +324,14 @@ def apply_shift(text, shift):
 
     print 'Your new string is '
     print '---------------'
-    print cryptic
+    return cryptic
  
 #
 # Problem 2: Codebreaking.
 #
+
+s = apply_coder('Hello, world!', build_encoder(8))
+
 def find_best_shift(wordlist, text):
     """
     Decrypts the encoded text and returns the plaintext.
@@ -344,13 +348,24 @@ def find_best_shift(wordlist, text):
     >>> apply_coder(s, build_decoder(8)) returns
     'Hello, world!'
     """
+    #find_best_shift(wordlist, s)
     ### TODO
-    splitText = text.split()
-    print splitText
-    for c in splitText:
-        print c
-        #text2 = ''.join([char for char in text if char.isalpha()])
-    #print text2
+    counter = 0
+    trigger = False
+    #splitText = text.split()
+    #print splitText
+    while trigger == False:
+        recode = apply_coder(s, build_decoder(counter))
+        for c in recode.split(","):
+            if is_word(wordlist, c) == False:
+                #print c
+                #print 'brute forcing through decoders, attempt number' , counter
+                #print 'The resulting words are: ', recode
+                counter += 1
+            else:
+                #print 'OMG ITS VALID'
+                trigger = True
+    return counter
     
    
 #
