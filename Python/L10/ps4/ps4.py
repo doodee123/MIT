@@ -350,22 +350,37 @@ def find_best_shift(wordlist, text):
     """
     #find_best_shift(wordlist, s)
     ### TODO
-    counter = 0
+    bestshift = 1
+    counter = 1
     trigger = False
     #splitText = text.split()
     #print splitText
-    while trigger == False:
+    #while trigger == False:
+    while counter <= 27:
+        noValidWords = 0
         recode = apply_coder(s, build_decoder(counter))
+        wordList = []
+        #print 'brute forcing through decoders, attempt number' , counter
         for c in recode.split(","):
+            wordList.append(c)
             if is_word(wordlist, c) == False:
                 #print c
                 #print 'brute forcing through decoders, attempt number' , counter
                 #print 'The resulting words are: ', recode
-                counter += 1
-            else:
-                #print 'OMG ITS VALID'
+                pass
+            else: 
+                #print 'OMG ', c ,' IS VALID'
+                noValidWords += 1
                 trigger = True
-    return counter
+
+        if noValidWords == len(wordList):
+            bestshift = counter
+            #print 'I think our shift is ', bestshift
+        counter += 1
+        #print wordList
+    #print 'End of While Loop with best shift of ', bestshift
+    #print counter
+    return bestshift
     
    
 #
