@@ -330,8 +330,6 @@ def apply_shift(text, shift):
 # Problem 2: Codebreaking.
 #
 
-s = apply_coder('Hello, world!', build_encoder(8))
-
 def find_best_shift(wordlist, text):
     """
     Decrypts the encoded text and returns the plaintext.
@@ -403,7 +401,21 @@ def apply_shifts(text, shifts):
     'JufYkaolfapxQdrnzmasmRyrpfdvpmEurrb?'
     """
     ### TODO.
- 
+    newString = text
+    tempText = text
+    for (start, shift) in shifts:
+        if start == 0:
+            tempString = tempText[start: ]
+            shiftedString = apply_coder(tempString, build_encoder(shift))
+            newString = shiftedString
+        else:
+            x = newString[ : start]
+            tempString = tempText[start: ]
+            shiftedString = apply_coder(tempString, build_encoder(shift))
+            newString = x + shiftedString
+            
+    print newString
+     
 #
 # Problem 4: Multi-level decryption.
 #
