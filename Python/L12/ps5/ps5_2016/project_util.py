@@ -65,7 +65,7 @@ def translate_html(html_fragment):
                     
                 parser_reg = ""      # code handled, erase register
 
-    if type(txt) is unicode:
+    if type(txt) is str:
         txt = unicode_to_ascii(txt)
         
     return txt
