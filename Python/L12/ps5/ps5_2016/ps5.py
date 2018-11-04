@@ -10,7 +10,7 @@ import threading
 from project_util import translate_html
 from mtTkinter import *
 from datetime import datetime
-# import pytz
+import pytz
 
 
 #-----------------------------------------------------------------------
@@ -55,6 +55,29 @@ def process(url):
 # Problem 1
 
 # TODO: NewsStory
+class NewsStory(object):
+    def __init__(self, guid, title, description, link, pubdate):
+        self.guid = guid
+        self.title = title
+        self.description = description
+        self.link = link
+        self.pubdate = pubdate
+
+    def get_guid(self):
+        return self.guid
+
+    def get_title(self):
+        return self.title
+
+    def get_description(self):
+        return self.description
+
+    def get_link(self):
+        return self.link
+
+    def get_pubdate(self):
+        return self.pubdate
+
 
 
 #======================
@@ -74,12 +97,62 @@ class Trigger(object):
 
 # Problem 2
 # TODO: PhraseTrigger
+class PhraseTrigger(Trigger):
+    def __init__(self, phrase):
+        self.phrase = phrase.lower()
+
+    def is_phrase_in(self, text):
+        phrase = self.phrase.lower()
+        text = text.lower()
+
+        for punc in string.punctuation:
+            text = text.replace(punc, " ")
+        splittext = text.split(" ")
+        
+        if '' in phrase:
+            phrase.strip()
+            
+        test = []
+        for word in splittext:
+            print('The word is', word)
+            if word in phrase:
+                test.append(word)
+            else:
+                if word not in splittext:
+                    if word in phrase:
+                        return False
+
+        if '' in test:
+            test.remove('')
+        #print(test)
+
+        TriggerBool = False
+        if test not in splittext:
+            return False
+        else:
+            TriggerBool = True
+        return TriggerBool
+
 
 # Problem 3
 # TODO: TitleTrigger
+class TitleTrigger(PhraseTrigger):
+    def evaluate(self, story):
+        return self.is_phrase_in(story.get_title())
+
+cuddly = NewsStory('', 'The purple cow is soft and cuddly.', '', '', datetime.now())
+PhraseTrigger("PURPLE COW").is_phrase_in(cuddly.get_title())
 
 # Problem 4
 # TODO: DescriptionTrigger
+class DescriptionTrigger():
+    def evaluate(self, story):
+        """
+        Returns True if an alert should be generated
+        for the given news item, or False otherwise.
+        """
+        # DO NOT CHANGE THIS!
+        raise NotImplementedError
 
 # TIME TRIGGERS
 
@@ -88,7 +161,15 @@ class Trigger(object):
 # Constructor:
 #        Input: Time has to be in EST and in the format of "%d %b %Y %H:%M:%S".
 #        Convert time from string to a datetime before saving it as an attribute.
-
+class TimeTrigger():
+    def evaluate(self, story):
+        """
+        Returns True if an alert should be generated
+        for the given news item, or False otherwise.
+        """
+        # DO NOT CHANGE THIS!
+        raise NotImplementedError
+    
 # Problem 6
 # TODO: BeforeTrigger and AfterTrigger
 
