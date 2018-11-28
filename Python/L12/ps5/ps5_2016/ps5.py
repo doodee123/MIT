@@ -103,35 +103,77 @@ class PhraseTrigger(Trigger):
 
     def is_phrase_in(self, text):
         phrase = self.phrase.lower()
+        #print('phrase is ', phrase)
         text = text.lower()
+        #print('text is ', text)
 
         for punc in string.punctuation:
             text = text.replace(punc, " ")
         splittext = text.split(" ")
+
+        newText = []
+        for x in splittext:
+            if x != "":
+                newText.append(x)
+        splittext = newText
+            
+        #print("Minus the spaces and we get ", splittext)
         
         if '' in phrase:
-            phrase.strip()
+            phrase = phrase.strip()
+
+        #if '' in splittext:
+            #phrase = splittext.strip()
             
         test = []
-        for word in splittext:
-            print('The word is', word)
-            if word in phrase:
+        phraseTemp = phrase.split()
+        for word in phraseTemp:
+            #print('The word is', word)
+            #print('splittext is ,',splittext)
+            #print('phrasetemp is ,',phraseTemp)
+            if word in splittext:
+                #index = phrase.index(word)
+                #print('the length of the ', word, ' is ', len(word))
+                #print('the length of the trigger word in phrase is ', len(phrase[index]))
                 test.append(word)
             else:
-                if word not in splittext:
-                    if word in phrase:
-                        return False
+                return False
 
         if '' in test:
             test.remove('')
-        #print(test)
+#So the problem might be that you are assigning True to your bool even when
+#a word from the phrase does not appear
 
-        TriggerBool = False
-        if test not in splittext:
-            return False
-        else:
-            TriggerBool = True
-        return TriggerBool
+        #TriggerBool = False
+        
+        for word in test:
+            #print('test is, ', test)
+            index = test.index(word)
+            length = len(test)
+            #print('Word Index is ', index, ' and word is ', test[index])
+            for item in splittext:
+                itemIndex = splittext.index(item)
+                #print('Item Index is ', itemIndex, ' and word is ', splittext[itemIndex])
+                if word not in splittext:
+                    print (word, " not in ", item, 'from splittext')
+                    return False
+                else:
+                    if word in splittext:
+                        #print('index+1 is ', index+1, 'index length is ', len(test), ' and itemIndex+1 is ', itemIndex+1, ' and its length is ', len(splittext))
+                        while itemIndex+1 < len(splittext) and index+1 < len(test):
+                            if word == splittext[itemIndex] and splittext[itemIndex+1] == test[index+1]:
+                                #print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  == ', test[index+1])
+                                #TriggerBool = True
+                                return True
+                                #break
+                                #print("test can be found in splittext")
+                            elif word == splittext[itemIndex] and splittext[itemIndex+1] != test[index+1]:
+                                return False
+                            break
+                    else:
+                        return False
+        #return TriggerBool
+        # split the text to match the phrase when it gets triggered? 
 
 
 # Problem 3
@@ -140,13 +182,22 @@ class TitleTrigger(PhraseTrigger):
     def evaluate(self, story):
         return self.is_phrase_in(story.get_title())
 
-cuddly = NewsStory('', 'The purple cow is soft and cuddly.', '', '', datetime.now())
-PhraseTrigger("PURPLE COW").is_phrase_in(cuddly.get_title())
+#cuddly = NewsStory('', 'The purple cow is soft and cuddly.', '', '', datetime.now())
+#separate  = NewsStory('', 'The purple blob over there is a cow.', '', '', datetime.now())
+#exclaim   = NewsStory('', 'Purple!!! Cow!!!', '', '',  datetime.now())
+#symbols   = NewsStory('', 'purple@#$%cow', '', '', datetime.now())
+#PhraseTrigger("PURPLE COW").is_phrase_in(cuddly.get_title())
+#PhraseTrigger("PURPLE COW").is_phrase_in(separate.get_title())
+#PhraseTrigger("PURPLE COW").is_phrase_in(exclaim.get_title())
+#PhraseTrigger("PURPLE COW").is_phrase_in(symbols.get_title())
+#badorder  = NewsStory('', 'Cow!!! Purple!!!', '', '', datetime.now())
+#PhraseTrigger("PURPLE COW").is_phrase_in(badorder.get_title())
 
 # Problem 4
 # TODO: DescriptionTrigger
-class DescriptionTrigger():
+class DescriptionTrigger(PhraseTrigger):
     def evaluate(self, story):
+        return self.is_phrase_in(story.get_description())
         """
         Returns True if an alert should be generated
         for the given news item, or False otherwise.
