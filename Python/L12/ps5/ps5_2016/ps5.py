@@ -13,6 +13,7 @@ from datetime import datetime
 import pytz
 
 
+
 #-----------------------------------------------------------------------
 
 #======================
@@ -212,23 +213,56 @@ class DescriptionTrigger(PhraseTrigger):
 # Constructor:
 #        Input: Time has to be in EST and in the format of "%d %b %Y %H:%M:%S".
 #        Convert time from string to a datetime before saving it as an attribute.
-class TimeTrigger():
+class TimeTrigger(Trigger):
     def evaluate(self, story):
+        
         """
         Returns True if an alert should be generated
         for the given news item, or False otherwise.
         """
         # DO NOT CHANGE THIS!
         raise NotImplementedError
-    
+
+    def __init__(self, date):
+        self.date = datetime.strptime(date, "%d %b %Y %H:%M:%S")
+        self.date.replace(tzinfo=pytz.timezone("EST"))
+
 # Problem 6
 # TODO: BeforeTrigger and AfterTrigger
+class BeforeTrigger(TimeTrigger):
+    def evaluate(self, story):
+        UTCdate = self.date.replace(tzinfo=pytz.timezone("EST"))
+        UTCpubdate = story.pubdate.replace(tzinfo=pytz.timezone("EST"))
+        if UTCdate > UTCpubdate:
+            #print("IS it true?")
+            return True
+        else:
+            #print ("False?")
+            return False
 
+class AfterTrigger(TimeTrigger):
+    def evaluate(self, story):
+        UTCdate = self.date.replace(tzinfo=pytz.timezone("EST"))
+        UTCpubdate = story.pubdate.replace(tzinfo=pytz.timezone("EST"))
+        if UTCdate < UTCpubdate:
+            return True
+        else:
+            return False
 
 # COMPOSITE TRIGGERS
 
 # Problem 7
 # TODO: NotTrigger
+class NotTrigger(Trigger):
+    def __init__(self, T):
+        self.T = Trigger
+
+    def evaluate(self, story):
+        if self.T != True:
+            return True
+        else:
+            if self.T != False:
+                return False          
 
 # Problem 8
 # TODO: AndTrigger
