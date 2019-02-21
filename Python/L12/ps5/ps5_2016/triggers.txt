@@ -3,7 +3,7 @@
 // stories!
 
 // title trigger named t1
-t1,TITLE,china
+t1,TITLE,China
 
 // description trigger named t2
 t2,DESCRIPTION,Trump

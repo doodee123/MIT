@@ -162,17 +162,18 @@ class PhraseTrigger(Trigger):
                     if word in splittext:
                         #print('index+1 is ', index+1, 'index length is ', len(test), ' and itemIndex+1 is ', itemIndex+1, ' and its length is ', len(splittext))
                         while itemIndex+1 < len(splittext) and index+1 < len(test):
-                            if word == splittext[itemIndex] and splittext[itemIndex+1] == test[index+1]:
+                            if word == splittext[itemIndex] and splittext[itemIndex+1] != test[index+1]:
+                                return False
+                                break
+                            elif word == splittext[itemIndex] and splittext[itemIndex+1] == test[index+1]:
                                 #print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  == ', test[index+1])
                                 #TriggerBool = True
                                 return True
-                                #break
+                                break
                                 #print("test can be found in splittext")
-                            elif word == splittext[itemIndex] and splittext[itemIndex+1] != test[index+1]:
-                                return False
-                            break
                     else:
                         return False
+                        
         #return TriggerBool
         # split the text to match the phrase when it gets triggered? 
 
@@ -181,7 +182,13 @@ class PhraseTrigger(Trigger):
 # TODO: TitleTrigger
 class TitleTrigger(PhraseTrigger):
     def evaluate(self, story):
-        return self.is_phrase_in(story.get_title())
+        #return self.is_phrase_in(story.get_title())
+        if self.is_phrase_in(story.get_title()) == False:
+            #print("TitleTrigger should be returning False")
+            return False
+        else:
+            #print("TitleTrigger is True")
+            return True
 
 #cuddly = NewsStory('', 'The purple cow is soft and cuddly.', '', '', datetime.now())
 #separate  = NewsStory('', 'The purple blob over there is a cow.', '', '', datetime.now())
@@ -198,7 +205,13 @@ class TitleTrigger(PhraseTrigger):
 # TODO: DescriptionTrigger
 class DescriptionTrigger(PhraseTrigger):
     def evaluate(self, story):
-        return self.is_phrase_in(story.get_description())
+##        return self.is_phrase_in(story.get_description())
+        if self.is_phrase_in(story.get_description()) == False:
+##            print("DescriptionTrigger should be returning False")
+            return False
+        else:
+##            print("DescriptionTrigger is True")
+            return True
         """
         Returns True if an alert should be generated
         for the given news item, or False otherwise.
@@ -258,7 +271,12 @@ class NotTrigger(Trigger):
         self.T = T
 
     def evaluate(self, story):
-        return not self.T.evaluate(story)          
+        #return not self.T.evaluate(story)
+        if self.T.evaluate(story) == True:
+            return False
+        else:
+            if self.T.evaluate(story) == False:
+                return True
 
 # Problem 8
 # TODO: AndTrigger
@@ -309,13 +327,20 @@ def filter_stories(stories, triggerlist):
 ##            print(story.get_description())
 ##            print(trigger.evaluate(story))
 ##            print("============================")
-            if trigger.evaluate(story) == True:
+            if trigger.evaluate(story) != True:
+                #triggeredStories.append(story)
+                pass
+            else:
+##                print("============================")
+##                print(story.get_title())
+##                print(story.get_description())
+##                print(trigger.evaluate(story))
                 triggeredStories.append(story)
-    stories = triggeredStories
-                
-    
-    
-    return stories
+
+
+    #stories = triggeredStories
+    return triggeredStories
+        
 
 
 
@@ -347,17 +372,18 @@ def read_trigger_config(filename):
 
 
 
-SLEEPTIME = 120 #seconds -- how often we poll
+SLEEPTIME = 240 #seconds -- how often we poll
 
 def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
     # to what is currently in the news
     try:
-        t1 = TitleTrigger("US")
-        t2 = DescriptionTrigger("Trade Deal")
-        t3 = DescriptionTrigger("China")
-        t4 = AndTrigger(t2, t3)
-        triggerlist = [t1, t4]
+        t1 = TitleTrigger("Trump")
+        t2 = DescriptionTrigger("Italy")
+        t3 = DescriptionTrigger("Trump")
+        t4 = OrTrigger(t2, t3)
+        #t4 = NotTrigger(t2)
+        triggerlist = [t4]
 
         # Problem 11
         # TODO: After implementing read_trigger_config, uncomment this line 
