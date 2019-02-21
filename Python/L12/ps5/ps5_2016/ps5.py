@@ -275,8 +275,17 @@ class AndTrigger(Trigger):
 
 # Problem 9
 # TODO: OrTrigger
+class OrTrigger(Trigger):
+    def __init__(self, T1, T2):
+        self.T1 = T1
+        self.T2 = T2
 
-
+    def evaluate(self, story):
+        if self.T1.evaluate(story) == True or self.T2.evaluate(story) == True:
+            return True
+        else:
+            return False
+        
 
 #======================
 # Filtering
@@ -292,6 +301,20 @@ def filter_stories(stories, triggerlist):
     # TODO: Problem 10
     # This is a placeholder
     # (we're just returning all the stories, with no filtering)
+    triggeredStories = []
+    for story in stories:
+        for trigger in triggerlist:
+##            print("============================")
+##            print(story.get_title())
+##            print(story.get_description())
+##            print(trigger.evaluate(story))
+##            print("============================")
+            if trigger.evaluate(story) == True:
+                triggeredStories.append(story)
+    stories = triggeredStories
+                
+    
+    
     return stories
 
 
@@ -330,9 +353,9 @@ def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
     # to what is currently in the news
     try:
-        t1 = TitleTrigger("election")
-        t2 = DescriptionTrigger("Trump")
-        t3 = DescriptionTrigger("Clinton")
+        t1 = TitleTrigger("US")
+        t2 = DescriptionTrigger("Trade Deal")
+        t3 = DescriptionTrigger("China")
         t4 = AndTrigger(t2, t3)
         triggerlist = [t1, t4]
 
