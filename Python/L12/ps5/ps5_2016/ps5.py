@@ -255,14 +255,10 @@ class AfterTrigger(TimeTrigger):
 # TODO: NotTrigger
 class NotTrigger(Trigger):
     def __init__(self, T):
-        self.T = Trigger
+        self.T = T
 
     def evaluate(self, story):
-        if self.T != True:
-            return True
-        else:
-            if self.T != False:
-                return False          
+        return not self.T.evaluate(story)          
 
 # Problem 8
 # TODO: AndTrigger
