@@ -148,29 +148,30 @@ class PhraseTrigger(Trigger):
         #TriggerBool = False
         
         for word in test:
-            #print('test is, ', test)
+            print('test is, ', test)
             index = test.index(word)
             length = len(test)
-            #print('Word Index is ', index, ' and word is ', test[index])
+            print('Word Index is ', index, ' and word is ', test[index])
             for item in splittext:
                 itemIndex = splittext.index(item)
-                #print('Item Index is ', itemIndex, ' and word is ', splittext[itemIndex])
+                print('Item Index is ', itemIndex, ' and word is ', splittext[itemIndex])
                 if word not in splittext:
                     print (word, " not in ", item, 'from splittext')
                     return False
                 else:
                     if word in splittext:
+                        print("Entering While Loop ", itemIndex+1, " is itemIndex+1 ", len(splittext), " is len(splittext) AND ", index+1, " is index+1 ", len(test), " is len(test)")
                         #print('index+1 is ', index+1, 'index length is ', len(test), ' and itemIndex+1 is ', itemIndex+1, ' and its length is ', len(splittext))
                         while itemIndex+1 < len(splittext) and index+1 < len(test):
-                            if word == splittext[itemIndex] and splittext[itemIndex+1] != test[index+1]:
-                                return False
-                                break
-                            elif word == splittext[itemIndex] and splittext[itemIndex+1] == test[index+1]:
+                            if word == splittext[itemIndex] and splittext[itemIndex+1] == test[index+1]:
                                 #print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  == ', test[index+1])
                                 #TriggerBool = True
                                 return True
-                                break
+                                #break
                                 #print("test can be found in splittext")
+                            elif word == splittext[itemIndex] and splittext[itemIndex+1] != test[index+1]:
+                                return False
+                            break
                     else:
                         return False
                         
