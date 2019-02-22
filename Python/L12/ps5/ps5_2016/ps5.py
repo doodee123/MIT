@@ -160,27 +160,32 @@ class PhraseTrigger(Trigger):
                 else:
                     if word in splittext:
                         print("Entering While Loop ", itemIndex+1, " is itemIndex+1 ", len(splittext), " is len(splittext) AND ", index+1, " is index+1 ", len(test), " is len(test)")
-                        #print('index+1 is ', index+1, 'index length is ', len(test), ' and itemIndex+1 is ', itemIndex+1, ' and its length is ', len(splittext))
                         while itemIndex+1 < len(splittext) and index+1 < len(test):
-                              if word == splittext[itemIndex]:
+                              if index > itemIndex:
+                                  print('Word Index is ', index, 'and ', 'Item Index is ', itemIndex) 
+                                  return False
+                              elif word == splittext[itemIndex]:
                                   print("While loop first IF triggered")
-                                  if splittext[itemIndex+1] == test[index+1]:
+                                  if splittext[itemIndex+1] != test[index+1]:
                                       print("first IF inner IF triggered")
-                                      print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  == ', test[index+1])
-                                      return True
+                                      print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  != ', test[index+1])
+                                      return False
                                       #print("test can be found in splittext")
                                   else:
-                                      return False
+                                      return True
                               elif word == splittext[itemIndex]:
                                   print("While loop ELIF triggered")
                                   if splittext[itemIndex+1] != test[index+1]:
                                       print("ELIF inner IF triggered")
                                       return False
+                              elif splittext[itemIndex+1] == test[index-1]:
+                                      print("2nd ELIF triggered")
+                                      return False
                               else:
                                   print("While loop ELSE triggered")
                                   #return False
                                   break
-                                
+                        print("Exiting while loop")     
 ##                            if word == splittext[itemIndex] and splittext[itemIndex+1] == test[index+1]:
 ##                                print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  == ', test[index+1])
 ##                                #TriggerBool = True
