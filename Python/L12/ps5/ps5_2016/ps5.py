@@ -101,10 +101,9 @@ class Trigger(object):
 class PhraseTrigger(Trigger):
     def __init__(self, phrase):
         self.phrase = phrase.lower()
-
+        
     def is_phrase_in(self, text):
         phrase = self.phrase.lower()
-        #print('phrase is ', phrase)
         text = text.lower()
         #print('text is ', text)
 
@@ -118,7 +117,7 @@ class PhraseTrigger(Trigger):
                 newText.append(x)
         splittext = newText
             
-        #print("Minus the spaces and we get ", splittext)
+        print("Minus the spaces and we get ", splittext)
         
         if '' in phrase:
             phrase = phrase.strip()
@@ -129,9 +128,9 @@ class PhraseTrigger(Trigger):
         test = []
         phraseTemp = phrase.split()
         for word in phraseTemp:
-            #print('The word is', word)
-            #print('splittext is ,',splittext)
-            #print('phrasetemp is ,',phraseTemp)
+            print('The word is', word)
+            print('splittext is ,',splittext)
+            print('phrasetemp is ,',phraseTemp)
             if word in splittext:
                 #index = phrase.index(word)
                 #print('the length of the ', word, ' is ', len(word))
@@ -142,12 +141,12 @@ class PhraseTrigger(Trigger):
 
         if '' in test:
             test.remove('')
-#So the problem might be that you are assigning True to your bool even when
-#a word from the phrase does not appear
+
 
         #TriggerBool = False
         
         for word in test:
+            #print("testing: ", testPhrase)
             print('test is, ', test)
             index = test.index(word)
             length = len(test)
@@ -163,15 +162,36 @@ class PhraseTrigger(Trigger):
                         print("Entering While Loop ", itemIndex+1, " is itemIndex+1 ", len(splittext), " is len(splittext) AND ", index+1, " is index+1 ", len(test), " is len(test)")
                         #print('index+1 is ', index+1, 'index length is ', len(test), ' and itemIndex+1 is ', itemIndex+1, ' and its length is ', len(splittext))
                         while itemIndex+1 < len(splittext) and index+1 < len(test):
-                            if word == splittext[itemIndex] and splittext[itemIndex+1] == test[index+1]:
-                                #print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  == ', test[index+1])
-                                #TriggerBool = True
-                                return True
-                                #break
-                                #print("test can be found in splittext")
-                            elif word == splittext[itemIndex] and splittext[itemIndex+1] != test[index+1]:
-                                return False
-                            break
+                              if word == splittext[itemIndex]:
+                                  print("While loop first IF triggered")
+                                  if splittext[itemIndex+1] == test[index+1]:
+                                      print("first IF inner IF triggered")
+                                      print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  == ', test[index+1])
+                                      return True
+                                      #print("test can be found in splittext")
+                                  else:
+                                      return False
+                              elif word == splittext[itemIndex]:
+                                  print("While loop ELIF triggered")
+                                  if splittext[itemIndex+1] != test[index+1]:
+                                      print("ELIF inner IF triggered")
+                                      return False
+                              else:
+                                  print("While loop ELSE triggered")
+                                  #return False
+                                  break
+                                
+##                            if word == splittext[itemIndex] and splittext[itemIndex+1] == test[index+1]:
+##                                print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  == ', test[index+1])
+##                                #TriggerBool = True
+##                                return True
+##                                #break
+##                                #print("test can be found in splittext")
+##                            elif word == splittext[itemIndex] and splittext[itemIndex+1] != test[index+1]:
+##                                print("while loops elif triggered")
+##                                return False
+##                            else:
+##                                return False                            
                     else:
                         return False
                         
@@ -199,8 +219,8 @@ class TitleTrigger(PhraseTrigger):
 #PhraseTrigger("PURPLE COW").is_phrase_in(separate.get_title())
 #PhraseTrigger("PURPLE COW").is_phrase_in(exclaim.get_title())
 #PhraseTrigger("PURPLE COW").is_phrase_in(symbols.get_title())
-#badorder  = NewsStory('', 'Cow!!! Purple!!!', '', '', datetime.now())
-#PhraseTrigger("PURPLE COW").is_phrase_in(badorder.get_title())
+badorder  = NewsStory('', 'Cow!!! Purple!!!', '', '', datetime.now())
+PhraseTrigger("PURPLE COW").is_phrase_in(badorder.get_title())
 
 # Problem 4
 # TODO: DescriptionTrigger
@@ -320,28 +340,29 @@ def filter_stories(stories, triggerlist):
     # TODO: Problem 10
     # This is a placeholder
     # (we're just returning all the stories, with no filtering)
-    triggeredStories = []
-    for story in stories:
-        for trigger in triggerlist:
+    #triggeredStories = []
+    
+    #for story in stories:
+        #for trigger in triggerlist:
 ##            print("============================")
 ##            print(story.get_title())
 ##            print(story.get_description())
 ##            print(trigger.evaluate(story))
 ##            print("============================")
-            if trigger.evaluate(story) != True:
+            #if trigger.evaluate(story) != True:
                 #triggeredStories.append(story)
-                pass
-            else:
+                #pass
+            #else:
 ##                print("============================")
 ##                print(story.get_title())
 ##                print(story.get_description())
 ##                print(trigger.evaluate(story))
-                triggeredStories.append(story)
+                #triggeredStories.append(story)
 
 
     #stories = triggeredStories
-    return triggeredStories
-        
+    #return triggeredStories
+    #return stories  
 
 
 
