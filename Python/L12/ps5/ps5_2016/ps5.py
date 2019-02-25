@@ -273,6 +273,33 @@ def filter_stories(stories, triggerlist):
 # User-Specified Triggers
 #======================
 # Problem 11
+def sort_triggers(t):
+    triggerlist = []
+    temp_ADD = []
+    temp_T = {}
+
+    for title,trigger in t.items():
+        if title == 'ADD':
+            temp_ADD.extend(trigger)
+        if trigger[0] == 'TITLE':
+            temp_T[title] = TitleTrigger(trigger[1])
+        elif trigger[0] == 'DESCRIPTION':
+            temp_T[title] = DescriptionTrigger(trigger[1])
+        elif trigger[0] == 'AND':
+            temp_T[title] = AndTrigger(trigger[1],trigger[2])
+        elif trigger[0] == 'OR':
+            temp_T[title] = OrTrigger(trigger[1],trigger[2])
+        elif trigger[0] == 'NOT':
+            temp_T[title] = NotTrigger(trigger[1],trigger[2])
+        elif trigger[0] == 'AFTER':
+            temp_T[title] = AfterTrigger(trigger[1])
+        elif trigger[0] == 'Before':
+            temp_T[title] = BeforeTrigger(trigger[1])
+    for each in temp_ADD:
+        triggerlist.append(temp_T[each])
+    #print(triggerlist is None)
+    return triggerlist
+
 def read_trigger_config(filename):
     """
     filename: the name of a trigger configuration file
@@ -303,35 +330,7 @@ def read_trigger_config(filename):
         if splitLength == 4:
             triggers[splitEntry[0]]=[splitEntry[1],splitEntry[2],splitEntry[3]]
  
-    sort_triggers(triggers)
-
-def sort_triggers(t):
-    triggerlist = []
-    temp_ADD = []
-    temp_T = {}
-
-    for title,trigger in t.items():
-        if title == 'ADD':
-            temp_ADD.extend(trigger)
-        if trigger[0] == 'TITLE':
-            temp_T[title] = TitleTrigger(trigger[1])
-        elif trigger[0] == 'DESCRIPTION':
-            temp_T[title] = DescriptionTrigger(trigger[1])
-        elif trigger[0] == 'AND':
-            temp_T[title] = AndTrigger(trigger[1],trigger[2])
-        elif trigger[0] == 'OR':
-            temp_T[title] = OrTrigger(trigger[1],trigger[2])
-        elif trigger[0] == 'NOT':
-            temp_T[title] = NotTrigger(trigger[1],trigger[2])
-        elif trigger[0] == 'AFTER':
-            temp_T[title] = AfterTrigger(trigger[1])
-        elif trigger[0] == 'Before':
-            temp_T[title] = BeforeTrigger(trigger[1])
-    for each in temp_ADD:
-        triggerlist.append(temp_T[each])
-
-    return triggerlist
-
+    return sort_triggers(triggers)
 
 SLEEPTIME = 240 #seconds -- how often we poll
 
@@ -351,7 +350,6 @@ def main_thread(master):
         
         triggerlist = read_trigger_config('triggers.txt')
         
-        print(triggerlist)
         # HELPER CODE - you don't need to understand this!
         # Draws the popup window that displays the filtered stories
         # Retrieves and filters the stories from the RSS feeds
