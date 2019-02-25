@@ -40,8 +40,6 @@ def process(url):
         try:
             pubdate = datetime.strptime(pubdate, "%a, %d %b %Y %H:%M:%S %Z")
             pubdate.replace(tzinfo=pytz.timezone("GMT"))
-          #  pubdate = pubdate.astimezone(pytz.timezone('EST'))
-          #  pubdate.replace(tzinfo=None)
         except ValueError:
             pubdate = datetime.strptime(pubdate, "%a, %d %b %Y %H:%M:%S %z")
 
@@ -98,145 +96,61 @@ class Trigger(object):
 
 # Problem 2
 # TODO: PhraseTrigger
+def clean_the_text(text):
+    newText = []
+    text = text.lower()
+    #text = " ".join(str(x) for x in text)
+    for punc in string.punctuation:
+        text = text.replace(punc, " ")
+    text = text.split(" ")
+    for x in text:
+        if x != "":
+            newText.append(x)
+        if '' in text:
+            text.remove('')
+
+    return newText
+
+
 class PhraseTrigger(Trigger):
     def __init__(self, phrase):
         self.phrase = phrase.lower()
-        
+       
     def is_phrase_in(self, text):
-        phrase = self.phrase.lower()
-        text = text.lower()
-        #print('text is ', text)
+        splitText = clean_the_text(text)
+        splitPhrase = clean_the_text(self.phrase)
+   
+        for t in splitText:
+            ti = splitText.index(t)
+            if t == splitPhrase[0]:
+                valid_order = True
+                for x in range(len(splitPhrase)):
+                    if len(splitPhrase) > len(splitText) - ti:
+                        return False                    
+                    elif splitText[ti + x] != splitPhrase[x]:
+                        valid_order = False
+                        break
+                if valid_order:
+                    return True
+               
+        return False
 
-        for punc in string.punctuation:
-            text = text.replace(punc, " ")
-        splittext = text.split(" ")
-
-        newText = []
-        for x in splittext:
-            if x != "":
-                newText.append(x)
-        splittext = newText
             
-        print("Minus the spaces and we get ", splittext)
-        
-        if '' in phrase:
-            phrase = phrase.strip()
-
-        #if '' in splittext:
-            #phrase = splittext.strip()
-            
-        test = []
-        phraseTemp = phrase.split()
-        for word in phraseTemp:
-            print('The word is', word)
-            print('splittext is ,',splittext)
-            print('phrasetemp is ,',phraseTemp)
-            if word in splittext:
-                #index = phrase.index(word)
-                #print('the length of the ', word, ' is ', len(word))
-                #print('the length of the trigger word in phrase is ', len(phrase[index]))
-                test.append(word)
-            else:
-                return False
-
-        if '' in test:
-            test.remove('')
-
-
-        #TriggerBool = False
-        
-        for word in test:
-            #print("testing: ", testPhrase)
-            print('test is, ', test)
-            index = test.index(word)
-            length = len(test)
-            print('Word Index is ', index, ' and word is ', test[index])
-            for item in splittext:
-                itemIndex = splittext.index(item)
-                print('Item Index is ', itemIndex, ' and word is ', splittext[itemIndex])
-                if word not in splittext:
-                    print (word, " not in ", item, 'from splittext')
-                    return False
-                else:
-                    if word in splittext:
-                        print("Entering While Loop ", itemIndex+1, " is itemIndex+1 ", len(splittext), " is len(splittext) AND ", index+1, " is index+1 ", len(test), " is len(test)")
-                        while itemIndex+1 < len(splittext) and index+1 < len(test):
-                              if index > itemIndex:
-                                  print('Word Index is ', index, 'and ', 'Item Index is ', itemIndex) 
-                                  return False
-                              elif word == splittext[itemIndex]:
-                                  print("While loop first IF triggered")
-                                  if splittext[itemIndex+1] != test[index+1]:
-                                      print("first IF inner IF triggered")
-                                      print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  != ', test[index+1])
-                                      return False
-                                      #print("test can be found in splittext")
-                                  else:
-                                      return True
-                              elif word == splittext[itemIndex]:
-                                  print("While loop ELIF triggered")
-                                  if splittext[itemIndex+1] != test[index+1]:
-                                      print("ELIF inner IF triggered")
-                                      return False
-                              elif splittext[itemIndex+1] == test[index-1]:
-                                      print("2nd ELIF triggered")
-                                      return False
-                              else:
-                                  print("While loop ELSE triggered")
-                                  #return False
-                                  break
-                        print("Exiting while loop")     
-##                            if word == splittext[itemIndex] and splittext[itemIndex+1] == test[index+1]:
-##                                print(word, ' is the word and triggers the check if ', splittext[itemIndex+1], '  == ', test[index+1])
-##                                #TriggerBool = True
-##                                return True
-##                                #break
-##                                #print("test can be found in splittext")
-##                            elif word == splittext[itemIndex] and splittext[itemIndex+1] != test[index+1]:
-##                                print("while loops elif triggered")
-##                                return False
-##                            else:
-##                                return False                            
-                    else:
-                        return False
-                        
-        #return TriggerBool
-        # split the text to match the phrase when it gets triggered? 
 
 
 # Problem 3
 # TODO: TitleTrigger
 class TitleTrigger(PhraseTrigger):
     def evaluate(self, story):
-        #return self.is_phrase_in(story.get_title())
-        if self.is_phrase_in(story.get_title()) == False:
-            #print("TitleTrigger should be returning False")
-            return False
-        else:
-            #print("TitleTrigger is True")
-            return True
-
-#cuddly = NewsStory('', 'The purple cow is soft and cuddly.', '', '', datetime.now())
-#separate  = NewsStory('', 'The purple blob over there is a cow.', '', '', datetime.now())
-#exclaim   = NewsStory('', 'Purple!!! Cow!!!', '', '',  datetime.now())
-#symbols   = NewsStory('', 'purple@#$%cow', '', '', datetime.now())
-#PhraseTrigger("PURPLE COW").is_phrase_in(cuddly.get_title())
-#PhraseTrigger("PURPLE COW").is_phrase_in(separate.get_title())
-#PhraseTrigger("PURPLE COW").is_phrase_in(exclaim.get_title())
-#PhraseTrigger("PURPLE COW").is_phrase_in(symbols.get_title())
-badorder  = NewsStory('', 'Cow!!! Purple!!!', '', '', datetime.now())
-PhraseTrigger("PURPLE COW").is_phrase_in(badorder.get_title())
+        return self.is_phrase_in(story.get_title())
 
 # Problem 4
 # TODO: DescriptionTrigger
 class DescriptionTrigger(PhraseTrigger):
     def evaluate(self, story):
-##        return self.is_phrase_in(story.get_description())
         if self.is_phrase_in(story.get_description()) == False:
-##            print("DescriptionTrigger should be returning False")
             return False
         else:
-##            print("DescriptionTrigger is True")
             return True
         """
         Returns True if an alert should be generated
@@ -345,29 +259,13 @@ def filter_stories(stories, triggerlist):
     # TODO: Problem 10
     # This is a placeholder
     # (we're just returning all the stories, with no filtering)
-    #triggeredStories = []
+    triggeredStories = []
     
-    #for story in stories:
-        #for trigger in triggerlist:
-##            print("============================")
-##            print(story.get_title())
-##            print(story.get_description())
-##            print(trigger.evaluate(story))
-##            print("============================")
-            #if trigger.evaluate(story) != True:
-                #triggeredStories.append(story)
-                #pass
-            #else:
-##                print("============================")
-##                print(story.get_title())
-##                print(story.get_description())
-##                print(trigger.evaluate(story))
-                #triggeredStories.append(story)
-
-
-    #stories = triggeredStories
-    #return triggeredStories
-    #return stories  
+    for story in stories:
+        for trigger in triggerlist:
+            if trigger.evaluate(story) == True:
+                triggeredStories.append(story)
+    return triggeredStories
 
 
 
@@ -395,8 +293,44 @@ def read_trigger_config(filename):
     # line is the list of lines that you need to parse and for which you need
     # to build triggers
 
-    print(lines) # for now, print it so you see what it contains!
+    #print(lines) # for now, print it so you see what it contains!
+    triggers = {}
+    for entry in lines:
+        splitEntry = entry.split(",")
+        splitLength = len(splitEntry)
+        if splitLength == 3:
+            triggers[splitEntry[0]]=[splitEntry[1],splitEntry[2]]
+        if splitLength == 4:
+            triggers[splitEntry[0]]=[splitEntry[1],splitEntry[2],splitEntry[3]]
+ 
+    sort_triggers(triggers)
 
+def sort_triggers(t):
+    triggerlist = []
+    temp_ADD = []
+    temp_T = {}
+
+    for title,trigger in t.items():
+        if title == 'ADD':
+            temp_ADD.extend(trigger)
+        if trigger[0] == 'TITLE':
+            temp_T[title] = TitleTrigger(trigger[1])
+        elif trigger[0] == 'DESCRIPTION':
+            temp_T[title] = DescriptionTrigger(trigger[1])
+        elif trigger[0] == 'AND':
+            temp_T[title] = AndTrigger(trigger[1],trigger[2])
+        elif trigger[0] == 'OR':
+            temp_T[title] = OrTrigger(trigger[1],trigger[2])
+        elif trigger[0] == 'NOT':
+            temp_T[title] = NotTrigger(trigger[1],trigger[2])
+        elif trigger[0] == 'AFTER':
+            temp_T[title] = AfterTrigger(trigger[1])
+        elif trigger[0] == 'Before':
+            temp_T[title] = BeforeTrigger(trigger[1])
+    for each in temp_ADD:
+        triggerlist.append(temp_T[each])
+
+    return triggerlist
 
 
 SLEEPTIME = 240 #seconds -- how often we poll
@@ -405,17 +339,19 @@ def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
     # to what is currently in the news
     try:
-        t1 = TitleTrigger("Trump")
-        t2 = DescriptionTrigger("Italy")
-        t3 = DescriptionTrigger("Trump")
-        t4 = OrTrigger(t2, t3)
-        #t4 = NotTrigger(t2)
-        triggerlist = [t4]
+##        t1 = TitleTrigger("Trump")
+##        t2 = DescriptionTrigger("Italy")
+##        t3 = DescriptionTrigger("Brexit")
+##        t4 = OrTrigger(t2, t3)
+##        #t4 = NotTrigger(t2)
+##        triggerlist = [t1,t3]
 
         # Problem 11
-        # TODO: After implementing read_trigger_config, uncomment this line 
-        # triggerlist = read_trigger_config('triggers.txt')
+        # TODO: After implementing read_trigger_config, uncomment this line
         
+        triggerlist = read_trigger_config('triggers.txt')
+        
+        print(triggerlist)
         # HELPER CODE - you don't need to understand this!
         # Draws the popup window that displays the filtered stories
         # Retrieves and filters the stories from the RSS feeds
